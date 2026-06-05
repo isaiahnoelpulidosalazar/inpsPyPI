@@ -1,6 +1,6 @@
 # inpsPyPI
 
-**inpsPyPI** A PyPI package for Python 3.10+ that provides useful tools for data conversion and validation, a custom EasySQL class for simplified SQLite operations, a custom excel file handler, and a custom file IO handler..
+**inpsPyPI** is a PyPI package for Python 3.10+ that provides useful tools for data conversion and validation, a custom EasySQL class for simplified SQLite operations, a custom excel file handler, and a custom file IO handler.
 
 ---
 

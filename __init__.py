@@ -8,4 +8,4 @@ from .sort import bubble_sort, cocktail_shaker_sort, odd_even_sort, selection_so
 from .stackily import Stackily 
 
 # changes:
-# - add main system
+# - update README.md
