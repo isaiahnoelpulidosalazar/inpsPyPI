@@ -5,7 +5,13 @@ from .excellent_reader import get_n_column_from_sheet_index, get_first_column_fr
 from .memory import Memory
 from .test import test_method
 from .sort import bubble_sort, cocktail_shaker_sort, odd_even_sort, selection_sort, insertion_sort, shellsort, quicksort, merge_sort, heapsort, introsort, timsort, counting_sort, bucket_sort_uniform, pigeonhole_sort, patience_sorting, bogosort, bead_sort
-from .stackily import Stackily 
+from .stackily import Stackily
+
+# To run unit tests, use the following command:
+# python -m unittest test_all.py
+
+# To run unit tests without print statements, use the following command:
+# python -m unittest -b test_all.py
 
 # changes:
-# - update README.md
+# - add unit test

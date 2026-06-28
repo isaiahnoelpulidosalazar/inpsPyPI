@@ -1,3 +1,5 @@
+import base64
+
 class Convert:
     @staticmethod
     def reverse(string: str) -> str:
