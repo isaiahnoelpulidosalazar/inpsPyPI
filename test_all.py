@@ -4,10 +4,8 @@ import sqlite3
 import io
 from contextlib import redirect_stdout
 
-# External dependency required by excellent_reader.py
 import openpyxl
 
-# Import the modules and components under test
 from builder_for_flask_jsonify import bake, JSON_RESPONSE_TITLE
 from check import Check
 from cipher import Cipher
@@ -66,7 +64,6 @@ class TestBuilderForFlaskJsonify(unittest.TestCase):
 
 class TestCheck(unittest.TestCase):
     def setUp(self):
-        # Reset Check.Email class variables to prevent test contamination
         Check.Email.valid_domain_names = []
         Check.Email.valid_domain_extensions = []
         Check.Email.valid_domains = []
@@ -79,8 +76,8 @@ class TestCheck(unittest.TestCase):
 
         self.assertTrue(Check.Email.is_valid("user@gmail.com"))
         self.assertFalse(Check.Email.is_valid("user@yahoo.com"))
-        self.assertFalse(Check.Email.is_valid("user@gmail"))  # Missing extension
-        self.assertFalse(Check.Email.is_valid("invalid_email"))  # No @ symbol
+        self.assertFalse(Check.Email.is_valid("user@gmail"))
+        self.assertFalse(Check.Email.is_valid("invalid_email"))
 
     def test_email_full_domain_validation(self):
         Check.Email.add_valid_domain("yahoo.com")
@@ -92,22 +89,19 @@ class TestCheck(unittest.TestCase):
         self.assertFalse(Check.Email.is_valid("invalid_email"))
 
     def test_is_a_valid_philippine_mobile_number(self):
-        # Valid patterns
         self.assertTrue(Check.is_a_valid_philippine_mobile_number("09171234567"))
         self.assertTrue(Check.is_a_valid_philippine_mobile_number("+639171234567"))
         self.assertTrue(Check.is_a_valid_philippine_mobile_number("639171234567"))
         self.assertTrue(Check.is_a_valid_philippine_mobile_number(" (0917) 123-4567 "))
 
-        # Invalid patterns
-        self.assertFalse(Check.is_a_valid_philippine_mobile_number("08171234567"))  # Wrong prefix
-        self.assertFalse(Check.is_a_valid_philippine_mobile_number("091712345"))  # Too short
-        self.assertFalse(Check.is_a_valid_philippine_mobile_number("091712345678"))  # Too long
-        self.assertFalse(Check.is_a_valid_philippine_mobile_number("0917abc4567"))  # Non-digits
+        self.assertFalse(Check.is_a_valid_philippine_mobile_number("08171234567"))
+        self.assertFalse(Check.is_a_valid_philippine_mobile_number("091712345"))
+        self.assertFalse(Check.is_a_valid_philippine_mobile_number("091712345678"))
+        self.assertFalse(Check.is_a_valid_philippine_mobile_number("0917abc4567"))
 
     def test_is_all_numbers(self):
         self.assertTrue(Check.is_all_numbers("123456"))
         self.assertFalse(Check.is_all_numbers("123a45"))
-        # Python's all() returns True for empty sequences
         self.assertTrue(Check.is_all_numbers(""))
 
     def test_has_numbers(self):
@@ -213,31 +207,25 @@ class TestEasySQL(unittest.TestCase):
                 pass
 
     def test_database_crud_operations(self):
-        # Create table
         self.sql.create_table("users", {"id": "INTEGER PRIMARY KEY", "name": "TEXT"})
 
-        # Insert records
         self.sql.insert_to_table("users", {"id": 1, "name": "Alice"})
         self.sql.insert_to_table("users", {"id": 2, "name": "Bob"})
 
-        # Get records
         rows = self.sql.get_table_values("users")
         self.assertEqual(len(rows), 2)
         self.assertEqual(rows[0], (1, "Alice"))
         self.assertEqual(rows[1], (2, "Bob"))
 
-        # Delete record with matching condition
         self.sql.delete_from_table("users", {"id": 1})
         rows = self.sql.get_table_values("users")
         self.assertEqual(len(rows), 1)
         self.assertEqual(rows[0], (2, "Bob"))
 
-        # Clear records
         self.sql.clear_table("users")
         rows = self.sql.get_table_values("users")
         self.assertEqual(len(rows), 0)
 
-        # Delete Table
         self.sql.delete_table("users")
         with self.assertRaises(sqlite3.OperationalError):
             self.sql.get_table_values("users")
@@ -245,13 +233,11 @@ class TestEasySQL(unittest.TestCase):
     def test_print_table(self):
         self.sql.create_table("users", {"id": "INTEGER PRIMARY KEY", "name": "TEXT"})
 
-        # Capture output on empty table
         f_empty = io.StringIO()
         with redirect_stdout(f_empty):
             self.sql.print_table("users")
         self.assertIn("Table 'users' is empty.", f_empty.getvalue())
 
-        # Capture output on populated table
         self.sql.insert_to_table("users", {"id": 1, "name": "Alice"})
         f_populated = io.StringIO()
         with redirect_stdout(f_populated):
@@ -267,7 +253,6 @@ class TestExcellentReader(unittest.TestCase):
         ws1.title = "SheetA"
         ws2 = wb.create_sheet("SheetB")
 
-        # Set up values to meet the skip_rows threshold (default is 2)
         ws1.append(["Header1"])
         ws1.append(["Header2"])
         ws1.append(["ValA3"])
@@ -338,30 +323,24 @@ class TestMemory(unittest.TestCase):
     def test_memory_lifecycle(self):
         self.assertEqual(self.memory.count(), 0)
 
-        # Add
         self.memory.add("data1")
         self.memory.add("data2")
         self.assertEqual(self.memory.count(), 2)
 
-        # Contains
         self.assertTrue(self.memory.contains("data1"))
         self.assertFalse(self.memory.contains("data3"))
 
-        # Get
         self.assertEqual(self.memory.get(0), "data1")
         self.assertEqual(self.memory.get(1), "data2")
 
-        # Remove element
         self.memory.remove("data1")
         self.assertEqual(self.memory.count(), 1)
         self.assertFalse(self.memory.contains("data1"))
 
-        # Remove at index
         self.memory.add("data3")
-        self.memory.remove_at(0)  # Removes "data2"
+        self.memory.remove_at(0)
         self.assertEqual(self.memory.get(0), "data3")
 
-        # Clear
         self.memory.clear()
         self.assertEqual(self.memory.count(), 0)
 
@@ -378,15 +357,12 @@ class TestSimpleFileHandler(unittest.TestCase):
                 pass
 
     def test_file_operations(self):
-        # Write
         SimpleFileHandler.write(self.filepath, "hello")
         self.assertTrue(os.path.exists(self.filepath))
 
-        # Read
         content = SimpleFileHandler.read(self.filepath)
         self.assertEqual(content, "hello")
 
-        # Append
         SimpleFileHandler.append(self.filepath, " world")
         content = SimpleFileHandler.read(self.filepath)
         self.assertEqual(content, "hello world")
@@ -418,13 +394,11 @@ class TestSort(unittest.TestCase):
         self.assertEqual(counting_sort([]), [])
 
     def test_bucket_sort_uniform(self):
-        # Bucket sort uniform expects values in [0, 1)
         arr = [0.5, 0.1, 0.9, 0.2, 0.7]
         expected = sorted(arr)
         self.assertEqual(bucket_sort_uniform(arr), expected)
 
     def test_bogosort(self):
-        # Using a tiny/already-sorted list because bogosort is non-deterministic and can run indefinitely
         self.assertEqual(bogosort([2, 1]), [1, 2])
 
     def test_bead_sort(self):
@@ -432,7 +406,6 @@ class TestSort(unittest.TestCase):
         expected = sorted(arr)
         self.assertEqual(bead_sort(list(arr)), expected)
 
-        # Bead sort expects positive integers; raises ValueError on negative inputs
         with self.assertRaises(ValueError):
             bead_sort([-1, 2])
 
@@ -445,21 +418,17 @@ class TestStackily(unittest.TestCase):
         self.assertTrue(self.stack.is_empty())
         self.assertEqual(self.stack.size(), 0)
 
-        # Push
         self.stack.push("item1")
         self.stack.push("item2")
         self.assertFalse(self.stack.is_empty())
         self.assertEqual(self.stack.size(), 2)
 
-        # Peek
         self.assertEqual(self.stack.peek(), "item2")
 
-        # Pop
         self.stack.pop()
         self.assertEqual(self.stack.size(), 1)
         self.assertEqual(self.stack.peek(), "item1")
 
-        # To list
         self.assertEqual(self.stack.to_list(), ["item1"])
 
 
