@@ -4,6 +4,10 @@ class Convert:
     @staticmethod
     def reverse(string: str) -> str:
         return string[::-1]
+    
+    @staticmethod
+    def to_real_name(string: str) -> str:
+        return string[0].upper() + string[1:].lower() if string else string
 
     @staticmethod
     def to_base64(string: str) -> str:

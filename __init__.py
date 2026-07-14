@@ -14,4 +14,4 @@ from .stackily import Stackily
 # python -m unittest -b test_all.py
 
 # changes:
-# - move internet connection check to check.py
+# - add to_real_name method to convert.py
