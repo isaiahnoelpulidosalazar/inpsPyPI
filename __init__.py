@@ -14,4 +14,4 @@ from .stackily import Stackily
 # python -m unittest -b test_all.py
 
 # changes:
-# - add internet connection check to test.py
+# - move internet connection check to check.py

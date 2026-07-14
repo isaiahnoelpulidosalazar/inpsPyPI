@@ -2,6 +2,7 @@ import re
 import base64
 import os
 import pkgutil
+import socket
 
 class Check:
     class Email:
@@ -69,3 +70,12 @@ class Check:
     @staticmethod
     def has_spaces(string: str) -> bool:
         return ' ' in string
+    
+    @staticmethod
+    def is_connected():
+        try:
+            socket.create_connection(("8.8.8.8", 53), timeout=3)
+            return True
+        except OSError:
+            pass
+        return False
