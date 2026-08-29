@@ -12,27 +12,27 @@ class Check:
         _should_use_full_domain = False
 
         @classmethod
-        def add_valid_domain_name(cls, string: str):
-            cls.valid_domain_names.append(string)
+        def add_valid_domain_name(self, string: str):
+            self.valid_domain_names.append(string)
 
         @classmethod
-        def add_valid_domain_extension(cls, string: str):
-            cls.valid_domain_extensions.append(string)
+        def add_valid_domain_extension(self, string: str):
+            self.valid_domain_extensions.append(string)
 
         @classmethod
-        def add_valid_domain(cls, string: str):
-            cls.valid_domains.append(string)
+        def add_valid_domain(self, string: str):
+            self.valid_domains.append(string)
 
         @classmethod
-        def should_use_full_domain(cls, boolean: bool = True):
-            cls._should_use_full_domain = boolean
+        def should_use_full_domain(self, boolean: bool = True):
+            self._should_use_full_domain = boolean
 
         @classmethod
-        def is_valid(cls, string: str) -> bool:
-            if cls._should_use_full_domain:
+        def is_valid(self, string: str) -> bool:
+            if self._should_use_full_domain:
                 try:
                     domain = string.split('@')
-                    return domain[1] in cls.valid_domains
+                    return domain[1] in self.valid_domains
                 except Exception:
                     return False
             else:
@@ -41,8 +41,8 @@ class Check:
                     domain_parts = domain[1].split('.')
                     domain_name = domain_parts[0]
                     domain_extension = domain_parts[1]
-                    return (domain_name in cls.valid_domain_names and 
-                            domain_extension in cls.valid_domain_extensions)
+                    return (domain_name in self.valid_domain_names and 
+                            domain_extension in self.valid_domain_extensions)
                 except Exception:
                     return False
 
