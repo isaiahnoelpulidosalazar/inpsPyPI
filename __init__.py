@@ -25,4 +25,4 @@ __all__ = [
 # python -m unittest -b test_all.py
 
 # changes:
-# - change cls to self in Check.Email
+# - update README.md
