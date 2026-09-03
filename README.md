@@ -1,58 +1,6 @@
 # inpsPyPI
 
-**inpsPyPI** is a PyPI package for Python 3.10+ that provides useful tools for data conversion and validation, a custom EasySQL class for simplified SQLite operations, a custom excel file handler, and a custom file IO handler.
-
----
-
-## Features
-
-`inpsPyPI` contains several distinct modules to help keep your codebase clean and readable:
-
-### Validation (`Check`)
-A robust validation class to simplify standard string and format checks.
-- Email formatting and customizable domain validation.
-- Validates Philippine mobile numbers (+639 / 09).
-- Check for spaces, symbols, and pure numerical strings.
-
-### Cryptography (`Cipher`)
-A basic cryptography class to implement classic cipher techniques.
-- Transposition Cipher
-- Giovanni Cipher
-- Keyword Cipher
-- Caesar Cipher
-
-### Data Conversion (`Convert`)
-Effortless type casting and data encoding.
-- Hex, Binary, and Base64 encoding/decoding.
-- String reversal and byte-array conversions.
-- Quick casting for Int, Float, Double, and Long.
-
-### Data Structures
-Custom implementations for improved data manipulation.
-- **`Dictionarily`**: An enhanced Dictionary object with built-in sorting (alphabetical and numerical-first).
-- **`Memory`**: A clean, object-oriented list/array wrapper to handle storage, indexing, and removal.
-- **`Stackily`**: A classic Stack implementation (`push`, `pop`, `peek`, `is_empty`, `size`).
-- **`Node`**: A lightweight binary tree node implementation.
-
-### Database Management (`EasySQL`)
-A simplified wrapper around Python's built-in `sqlite3`.
-- Create tables with ease by passing lists of dictionaries.
-- Insert, delete, and clear records directly via Python dictionaries.
-- Fetch and print table values seamlessly.
-
-### Excel Operations
-A wrapper for `openpyxl` allowing for extremely fast Excel file data manipulation.
-- Read and write to specific columns across single or multiple sheets.
-- Skip header rows easily using `skip_rows`.
-- Zero-hassle reading/writing to entire column letters (e.g., Column 'A').
-
-### File Handling (`SimpleFileHandler`)
-Static methods to rapidly `read()`, `write()`, and `append()` to text files using `utf-8` encoding.
-
-### Sorting Algorithms
-A massive suite of sorting algorithms available as quick plug-and-play functions.
-- Quick Sort, Merge Sort, Heap Sort, Selection Sort, Insertion Sort, Bubble Sort.
-- Advanced/Niche Sorts: Tim Sort, Intro Sort, Cocktail Shaker Sort, Shell Sort, Pigeonhole Sort, Bead Sort, and even Bogo Sort!
+A versatile Python utility library providing helpers for data structures, ciphers, data conversion, validations, SQLite management, Excel spreadsheet operations, and common sorting algorithms.
 
 ---
 
@@ -63,80 +11,272 @@ pip install inpsPyPI
 ```
 
 ### Dependencies
-The package largely uses Python's standard library (e.g., `sqlite3`, `math`, `re`, `base64`). However, the Excel operations module requires:
 - `openpyxl`
 - `unidecode`
 
 ---
 
-## Quick Usage Examples
+## Features & Modules
 
-### 1. Simple SQLite Database Queries (`EasySQL`)
+- **Validation (`Check`)**: Email, Philippine mobile numbers, strings, and internet connectivity checks.
+- **Ciphers (`Cipher`)**: Caesar, Keyword, Giovanni, and Transposition ciphers.
+- **Conversion (`Convert`)**: Base64, Hex, Binary, Byte arrays, and data type conversions.
+- **Data Structures**:
+  - `Dictionarily`: Custom dictionary with key-sorting capabilities.
+  - `Memory`: Dynamic list/storage manager.
+  - `Stackily`: Lightweight LIFO stack implementation.
+- **Database (`EasySQL`)**: Simplified SQLite CRUD interface.
+- **Excel Operations (`excellent_reader`)**: Read and write column data across sheets.
+- **File Management (`SimpleFileHandler`)**: Fast read, write, and append operations.
+- **Algorithms (`sort`)**: 16+ classic and non-comparison sorting algorithms.
+- **Flask Helpers (`bake`)**: Standardized JSON response formatting.
+
+---
+
+## Usage Guide
+
+### 1. Validations (`Check`)
+
 ```python
-from inpsPyPI import EasySQL
+from inpsPyPI.check import Check
 
-db = EasySQL("my_database")
-
-# Create a database table
-db.create_table("users", {
-    "id": "INTEGER PRIMARY KEY", 
-    "name": "TEXT",
-    "age": "INTEGER"
-})
-
-# Insert data
-db.insert_to_table("users", {"id": 1, "name": "Alice", "age": 28})
-
-# Fetch values
-records = db.get_table_values("users")
-print(records)
-```
-
-### 2. Validating Phone Numbers & Emails (`Check`)
-```python
-from inpsPyPI import Check
-
-# Validate Philippine Phone Numbers
-is_valid = Check.is_a_valid_philippine_mobile_number("+639123456789")
-print(is_valid)  # True
-
-# Validate Emails with strict domain rules
+# Email validation (by domain name and extension)
 Check.Email.add_valid_domain_name("gmail")
 Check.Email.add_valid_domain_extension("com")
-print(Check.Email.is_valid("user@gmail.com"))  # True
-```
+Check.Email.should_use_full_domain(False)
+Check.Email.is_valid("user@gmail.com")  # True
 
-### 3. File Handling (`SimpleFileHandler`)
-```python
-from inpsPyPI import SimpleFileHandler
+# Email validation (by full domain)
+Check.Email.add_valid_domain("company.org")
+Check.Email.should_use_full_domain(True)
+Check.Email.is_valid("user@company.org")  # True
 
-# Write, Append, and Read
-SimpleFileHandler.write("log.txt", "Process started.\n")
-SimpleFileHandler.append("log.txt", "Process finished.\n")
+# Philippine mobile number check
+Check.is_a_valid_philippine_mobile_number("+639171234567")  # True
+Check.is_a_valid_philippine_mobile_number("09171234567")     # True
 
-print(SimpleFileHandler.read("log.txt"))
-```
+# String checks
+Check.is_all_numbers("12345")  # True
+Check.has_numbers("abc1")      # True
+Check.has_symbols("hello!")    # True
+Check.has_spaces("hello world") # True
 
-### 4. Text Encryption (`Cipher`)
-```python
-from inpsPyPI import Cipher
-
-encrypted = Cipher.caesar_cipher("HELLO WORLD", shift=3)
-print(encrypted)  # KHOOR ZRUOG
-```
-
-### 5. Sorting Array Data
-```python
-from inpsPyPI import quicksort, merge_sort
-
-array = [5, 2, 9, 1, 5, 6]
-print(quicksort(array)) #[1, 2, 5, 5, 6, 9]
+# Network connectivity check
+Check.is_connected()  # Returns True if connected to internet
 ```
 
 ---
 
-## Contributing
-Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change. 
+### 2. Ciphers (`Cipher`)
 
-## License
-[MIT](https://choosealicense.com/licenses/mit/)
+```python
+from inpsPyPI.cipher import Cipher
+
+# Caesar Cipher
+Cipher.caesar_cipher("HELLO WORLD", shift=3)  # "KHOOR ZRUOG"
+
+# Keyword Cipher
+Cipher.keyword_cipher("HELLO WORLD", keyword="KEYWORD")  # "AOGGJ UJNGW"
+
+# Giovanni Cipher
+Cipher.giovanni_cipher("HELLO WORLD", keyword="KEYWORD", key_letter="C")  # "RYCCH SHLCE"
+
+# Transposition Cipher
+Cipher.transposition_cipher("HELLO WORLD")  # "HLOOLELWRD"
+```
+
+---
+
+### 3. Conversions (`Convert`)
+
+```python
+from inpsPyPI.convert import Convert
+
+# String transformations
+Convert.reverse("python")         # "nohtyp"
+Convert.to_real_name("jOhN")      # "John"
+
+# Base64
+b64 = Convert.to_base64("hello")  # "aGVsbG8="
+Convert.from_base64(b64)          # "hello"
+
+# Hexadecimal
+hex_val = Convert.to_hex("hello") # "68656C6C6F"
+Convert.from_hex(hex_val)         # "hello"
+
+# Binary
+bin_val = Convert.to_binary("A")  # "01000001"
+Convert.from_binary(bin_val)      # "A"
+
+# Byte Array
+byte_val = Convert.to_byte_array("hello")  # b"hello"
+Convert.from_byte_array(byte_val)          # "hello"
+
+# Numeric conversions
+Convert.to_int("42")      # 42
+Convert.to_float("3.14")  # 3.14
+```
+
+---
+
+### 4. Custom Dictionary (`Dictionarily`)
+
+```python
+from inpsPyPI import Dictionarily
+
+d = Dictionarily()
+d.add("b", 2)
+d.add("a", 1)
+d.add(10, "ten")
+d.add(2, "two")
+
+# Sort alphabetically by stringified key
+d.sort()
+
+# Sort numbers before string keys
+d.sort_numbers_first()
+print(d.show())  # {2: 'two', 10: 'ten', 'a': 1, 'b': 2}
+```
+
+---
+
+### 5. SQLite Helper (`EasySQL`)
+
+```python
+from inpsPyPI import EasySQL
+
+# Connects to 'my_database.db'
+sql = EasySQL("my_database")
+
+# Create a table
+sql.create_table("users", {"id": "INTEGER PRIMARY KEY", "name": "TEXT"})
+
+# Insert records
+sql.insert_to_table("users", {"id": 1, "name": "Alice"})
+sql.insert_to_table("users", {"id": 2, "name": "Bob"})
+
+# Fetch records
+rows = sql.get_table_values("users")  # [(1, 'Alice'), (2, 'Bob')]
+
+# Print table contents to stdout
+sql.print_table("users")
+
+# Delete specific row
+sql.delete_from_table("users", {"id": 1})
+
+# Clear all rows or drop table
+sql.clear_table("users")
+sql.delete_table("users")
+```
+
+---
+
+### 6. Excel Reader & Writer (`excellent_reader`)
+
+```python
+from inpsPyPI import excellent_reader
+
+# Read columns (skipping header rows, default=2)
+sheet_data = excellent_reader.get_n_column_from_sheet_index("data.xlsx", index=0, column="A", skip_rows=2)
+all_sheets_data = excellent_reader.get_first_column_from_all_sheets("data.xlsx", skip_rows=2)
+
+# Write column values to a specific sheet
+excellent_reader.set_n_column_from_sheet_index(
+    "data.xlsx", 
+    index=0, 
+    column="B", 
+    value=["Val1", "Val2"], 
+    skip_rows=2
+)
+
+# Write single value to all sheets
+excellent_reader.set_first_column_from_all_sheets("data.xlsx", value="Default", skip_rows=2)
+```
+
+---
+
+### 7. Data Storage & Stacks (`Memory`, `Stackily`)
+
+```python
+from inpsPyPI import Memory, Stackily
+
+# Memory (List wrapper)
+mem = Memory()
+mem.add("item1")
+mem.add("item2")
+mem.contains("item1")  # True
+mem.get(0)             # "item1"
+mem.remove_at(0)
+mem.count()            # 1
+mem.clear()
+
+# Stackily (LIFO Stack)
+stack = Stackily()
+stack.push("a")
+stack.push("b")
+stack.peek()      # "b"
+stack.pop()
+stack.size()      # 1
+stack.is_empty()  # False
+stack.to_list()   # ['a']
+```
+
+---
+
+### 8. Sorting Algorithms (`sort`)
+
+```python
+from inpsPyPI import sort
+
+data = [5, 2, 9, 1, 5, 6]
+
+sort.bubble_sort(list(data))
+sort.quicksort(list(data))
+sort.merge_sort(list(data))
+sort.heapsort(list(data))
+sort.insertion_sort(list(data))
+sort.selection_sort(list(data))
+sort.shellsort(list(data))
+sort.timsort(list(data))
+sort.cocktail_shaker_sort(list(data))
+sort.odd_even_sort(list(data))
+sort.introsort(list(data))
+sort.counting_sort(list(data))
+sort.pigeonhole_sort(list(data))
+sort.patience_sorting(list(data))
+sort.bead_sort(list(data))
+sort.bucket_sort_uniform([0.5, 0.1, 0.9, 0.2])
+```
+
+---
+
+### 9. File Operations & Response Baking
+
+```python
+from inpsPyPI.simple_file_handler import SimpleFileHandler
+from inpsPyPI import bake
+
+# Simple File Handler
+SimpleFileHandler.write("output.txt", "Initial content")
+SimpleFileHandler.append("output.txt", "\nAppended line")
+content = SimpleFileHandler.read("output.txt")
+
+# Flask Jsonify Helper
+response = bake({"status": "success"})  # {'response_data': {'status': 'success'}}
+```
+
+---
+
+## Running Unit Tests
+
+To run all unit tests:
+
+```bash
+python -m unittest test_all.py
+```
+
+To run unit tests in buffer mode (suppress print outputs during testing):
+
+```bash
+python -m unittest -b test_all.py
+```
